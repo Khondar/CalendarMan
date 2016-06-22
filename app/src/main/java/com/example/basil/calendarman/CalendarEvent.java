@@ -24,30 +24,31 @@ public class CalendarEvent {
     Calendar beginTime = Calendar.getInstance();
     int MY_PERMISSIONS_REQUEST_WRITE;
     int id = 3;
+    String eventID;
 
 
 
-    public void settaTempoEvento (int annoI, int meseI, int giornoI, int oraI, int minutiI, int annoF, int meseF, int giornoF, int oraF, int minutiF){
+    public void settaTempoEvento (MyEvent mEvent){
 
-    beginTime.set(annoI, meseI, giornoI, oraI, minutiI);
+    beginTime.set(mEvent.getAnnoI(), mEvent.getMeseI(), mEvent.getGiornoI(), mEvent.getOraI(), mEvent.getMinutiI());
     startMillis = beginTime.getTimeInMillis();
     Calendar endTime = Calendar.getInstance();
-    endTime.set(annoF, meseF, giornoF, oraF, minutiF);
+    endTime.set(mEvent.getAnnoF(), mEvent.getMeseF(), mEvent.getGiornoF(), mEvent.getOraF(), mEvent.getMinutiF());
     endMillis = endTime.getTimeInMillis();
     }
 
-    public void InsertEvent(Context context, Activity activity, String title, String description){
+    public void InsertEvent(Context context, Activity activity, MyEvent mEvent){
     ContentResolver cr = context.getContentResolver();
     ContentValues values = new ContentValues();
     TimeZone timeZone = TimeZone.getDefault();
     values.put(CalendarContract.Events.DTSTART, startMillis);
     values.put(CalendarContract.Events.DTEND, endMillis);
     values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
-    values.put(CalendarContract.Events.TITLE, title);
-    values.put(CalendarContract.Events.DESCRIPTION, description);
+    values.put(CalendarContract.Events.TITLE, mEvent.getNome());
+    values.put(CalendarContract.Events.DESCRIPTION, mEvent.getDescrizione());
     values.put(CalendarContract.Events.CALENDAR_ID, id);
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR)!= PackageManager.PERMISSION_GRANTED){
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.READ_CALENDAR)){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.WRITE_CALENDAR)){
 
             }else{
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE);
@@ -55,10 +56,33 @@ public class CalendarEvent {
             }
         }
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        eventID = uri.getLastPathSegment();
     }
     // Retrieve ID for new event
-   /* String eventID = uri.getLastPathSegment();
 
+    public MyEvent riceviEvento (Context context, Activity activity){
+
+        MyEvent myEvent = new MyEvent();
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR)!= PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.READ_CALENDAR)){
+            }else{
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE);
+            }
+        }
+
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = CalendarContract.Events.CONTENT_URI;
+        final String[] EVENT_PROJECTION = new String[] {
+                CalendarContract.Events.DTSTART,
+                CalendarContract.Events.DTEND,
+                CalendarContract.Events.TITLE,
+                CalendarContract.Events.DESCRIPTION,
+        };
+
+        return myEvent;
+    }
+   /*
     Uri uri = CalendarContract.Calendars.CONTENT_URI;
     String[] projection = new String[] {
             CalendarContract.Calendars._ID,
