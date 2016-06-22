@@ -82,11 +82,12 @@ public class CalendarEvent {
 
         String seletion = "((" + CalendarContract.Calendars._ID + "))";
         String[] selectionArgs = new  String[] {"3"};
-        c=cr.query(uri, EVENT_PROJECTION, seletion, selectionArgs, null);
+        c = cr.query(uri, EVENT_PROJECTION, seletion, selectionArgs, null);
 
-        String dataFine = CalendarContract.Events.DTEND;
-        myEvent.setNome(CalendarContract.Events.TITLE);
-        myEvent.setDescrizione(CalendarContract.Events.DESCRIPTION);
+        String dataStart = c.getString(c.getColumnIndex(CalendarContract.Events.DTSTART));
+        String dataFine = c.getString(c.getColumnIndex(CalendarContract.Events.DTEND));
+        myEvent.setNome(c.getString(c.getColumnIndex(CalendarContract.Events.TITLE)));
+        myEvent.setDescrizione(c.getString(c.getColumnIndex(CalendarContract.Events.DESCRIPTION)));
         return myEvent;
     }
    /*
