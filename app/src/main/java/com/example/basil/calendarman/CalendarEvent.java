@@ -1,7 +1,10 @@
 package com.example.basil.calendarman;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
@@ -9,6 +12,8 @@ import javax.xml.datatype.Duration;
 import java.util.Calendar;
 import java.util.TimeZone;
 import android.content.Context;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Created by basil on 22/06/2016.
@@ -17,6 +22,7 @@ public class CalendarEvent {
     long startMillis = 0;
     long endMillis = 0;
     Calendar beginTime = Calendar.getInstance();
+    int MY_PERMISSIONS_REQUEST_WRITE;
 
 
 
@@ -29,7 +35,7 @@ public class CalendarEvent {
     endMillis = endTime.getTimeInMillis();
     }
 
-    public void InsertEvent(Context context, String title, String description, int id){
+    public void InsertEvent(Context context, Activity activity, String title, String description, int id){
     ContentResolver cr = context.getContentResolver();
     ContentValues values = new ContentValues();
     TimeZone timeZone = TimeZone.getDefault();
@@ -39,7 +45,15 @@ public class CalendarEvent {
     values.put(CalendarContract.Events.TITLE, title);
     values.put(CalendarContract.Events.DESCRIPTION, description);
     values.put(CalendarContract.Events.CALENDAR_ID, id);
-    Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR)!= PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,Manifest.permission.READ_CALENDAR)){
+
+            }else{
+                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE);
+
+            }
+        }
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
     }
     // Retrieve ID for new event
     String eventID = uri.getLastPathSegment();
