@@ -70,7 +70,7 @@ public class CalendarEvent {
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSIONS_REQUEST_WRITE);
             }
         }
-
+        Cursor c = null;
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Events.CONTENT_URI;
         final String[] EVENT_PROJECTION = new String[] {
@@ -80,6 +80,13 @@ public class CalendarEvent {
                 CalendarContract.Events.DESCRIPTION,
         };
 
+        String seletion = "((" + CalendarContract.Calendars._ID + "))";
+        String[] selectionArgs = new  String[] {"3"};
+        c=cr.query(uri, EVENT_PROJECTION, seletion, selectionArgs, null);
+
+        String dataFine = CalendarContract.Events.DTEND;
+        myEvent.setNome(CalendarContract.Events.TITLE);
+        myEvent.setDescrizione(CalendarContract.Events.DESCRIPTION);
         return myEvent;
     }
    /*
