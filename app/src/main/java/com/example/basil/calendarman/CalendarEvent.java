@@ -23,6 +23,7 @@ public class CalendarEvent {
     long endMillis = 0;
     Calendar beginTime = Calendar.getInstance();
     int MY_PERMISSIONS_REQUEST_WRITE;
+    int id = 3;
 
 
 
@@ -35,7 +36,7 @@ public class CalendarEvent {
     endMillis = endTime.getTimeInMillis();
     }
 
-    public void InsertEvent(Context context, Activity activity, String title, String description, int id){
+    public void InsertEvent(Context context, Activity activity, String title, String description){
     ContentResolver cr = context.getContentResolver();
     ContentValues values = new ContentValues();
     TimeZone timeZone = TimeZone.getDefault();
@@ -56,7 +57,7 @@ public class CalendarEvent {
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
     }
     // Retrieve ID for new event
-    String eventID = uri.getLastPathSegment();
+   /* String eventID = uri.getLastPathSegment();
 
     Uri uri = CalendarContract.Calendars.CONTENT_URI;
     String[] projection = new String[] {
@@ -67,5 +68,5 @@ public class CalendarEvent {
             CalendarContract.Calendars.CALENDAR_COLOR
     };
 
-    Cursor calendarCursor = managedQuery(uri, projection, null, null, null);
+    Cursor calendarCursor = managedQuery(uri, projection, null, null, null);*/
 }
