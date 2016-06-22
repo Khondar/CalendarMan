@@ -17,8 +17,7 @@ public class CalendarEvent {
     long startMillis = 0;
     long endMillis = 0;
     Calendar beginTime = Calendar.getInstance();
-    Context context;
-    ContentResolver cr = getContentResolver();
+
 
 
     public void settaTempoEvento (int annoI, int meseI, int giornoI, int oraI, int minutiI, int annoF, int meseF, int giornoF, int oraF, int minutiF){
@@ -30,16 +29,16 @@ public class CalendarEvent {
     endMillis = endTime.getTimeInMillis();
     }
 
-    public void InsertEvent(){
-    ContentResolver cr =getContentResolver();
+    public void InsertEvent(Context context, String title, String description, int id){
+    ContentResolver cr = context.getContentResolver();
     ContentValues values = new ContentValues();
     TimeZone timeZone = TimeZone.getDefault();
     values.put(CalendarContract.Events.DTSTART, startMillis);
     values.put(CalendarContract.Events.DTEND, endMillis);
     values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
-    values.put(CalendarContract.Events.TITLE, "Walk The Dog");
-    values.put(CalendarContract.Events.DESCRIPTION, "My dog is bored, so we're going on a really long walk!");
-    values.put(CalendarContract.Events.CALENDAR_ID, 3);
+    values.put(CalendarContract.Events.TITLE, title);
+    values.put(CalendarContract.Events.DESCRIPTION, description);
+    values.put(CalendarContract.Events.CALENDAR_ID, id);
     Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
     }
     // Retrieve ID for new event
